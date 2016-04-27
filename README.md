@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #Twitter Trending topics with Apache Storm on HDInsight
 
 A storm topology using Trident. It calculates trending topics (hashtags) on Twitter. This is heavily based on the [trident-storm](https://github.com/jalonsoramos/trident-storm) example by Juan Alonso.
@@ -87,3 +88,7 @@ After the topology starts, you should see debug information containing the hasht
 	DEBUG: [band, 1]
 	DEBUG: [punk, 1]
 	DEBUG: [indonesiapunkrock, 1]
+=======
+# TwitterTopWords
+Using Apache Storm to get the real-time sentiment of a certain hash tag
+>>>>>>> f4bacbb1eff59a5024b366f5b81744b8e8e22798
