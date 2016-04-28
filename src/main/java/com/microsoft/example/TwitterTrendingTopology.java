@@ -19,6 +19,7 @@ import com.microsoft.example.TwitterSpout;
 import com.microsoft.example.WordCount;
 import com.microsoft.example.Output;
 import com.microsoft.example.OutputTime;
+import com.microsoft.example.ConvertToList;
 public class TwitterTrendingTopology {
   //Build the topology
   public static StormTopology buildTopology(IBatchSpout spout) throws IOException {
@@ -34,15 +35,16 @@ public class TwitterTrendingTopology {
     .each(new Fields("tweet"), new SplitSentence(), new Fields("word"))
     .groupBy(new Fields("word"))
 	//    .persistentAggregate(new MemoryMapState.Factory(), new Count(), new Fields("count"))
-	//	.each(new Fields("word"), new WordCount(),new Fields("count"))
 	.each(new Fields("word"), new WordCount(), new Fields("count"))
 	//	.newValuesStream()
 	.toStream()
 	.applyAssembly(new FirstN(10,"count"))
-	.each(new Fields("word"), new OutputTime(), new Fields("time"))
-	      .toStream()
-	//.newStream(new Values(newFields("word").toList()))
-	.each(new Fields("word"), new Output(), new Fields("Output"));
+	.toStream()
+	//.each(new Fields("word","count"), new Debug())
+	.aggregate(new Fields("word"),new ConvertToList(), new Fields("list"));
+	//.newValuesStream()
+	//.each(new Fields("list"), new Debug())
+	//.each(new Fields("list"), new Output(), new Fields("Output"));
 	//	.each(new Fields("word"), new Debug());
 	//.project(new Fields("word", "count"));
 	//     .groupBy(new Fields("word"))
@@ -50,7 +52,7 @@ public class TwitterTrendingTopology {
 	//.applyAssembly(new FirstN(10, "count"))
 	// .each(new Fields("word", "count"), new Debug());
     //Build and return the topology
-    //ewwwwwwwwwwwwwwwwwwwwwwwwSystem.out.println("This is topology");
+
     return topology.build();
   }
 
