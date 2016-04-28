@@ -1,3 +1,4 @@
+//Reference: Develop Java-based topologies for a basic word-count application with Apache Storm and Maven on HDInsight WordCount.java https://azure.microsoft.com/en-us/documentation/articles/dinsight-storm-develop-java-topology  
 package com.microsoft.example;
 
 import storm.trident.operation.BaseFunction;

@@ -1,3 +1,5 @@
+//Reference: Develop Java-based topologies for a basic word-count application with Apache Storm and Maven on HDInsight WordCount.java https://azure.microsoft.com/en-us/documentation/articles/hdinsight-storm-develop-java-topology
+
 package com.microsoft.example;
 
 import java.util.HashMap;
