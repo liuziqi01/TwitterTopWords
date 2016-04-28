@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<!--
 #Twitter Trending topics with Apache Storm on HDInsight
 
 A storm topology using Trident. It calculates trending topics (hashtags) on Twitter. This is heavily based on the [trident-storm](https://github.com/jalonsoramos/trident-storm) example by Juan Alonso.
@@ -88,7 +88,50 @@ After the topology starts, you should see debug information containing the hasht
 	DEBUG: [band, 1]
 	DEBUG: [punk, 1]
 	DEBUG: [indonesiapunkrock, 1]
-=======
+-->
 # TwitterTopWords
-Using Apache Storm to get the real-time sentiment of a certain hash tag
->>>>>>> f4bacbb1eff59a5024b366f5b81744b8e8e22798
+Using Apache Storm to get the real-time sentiment of a certain hash tag.
+report the top 10 words that are not stop words (http://www.ranks.nl/stopwords) in all the live
+tweets In English that contain the #gameofthrones hashtag.
+##What it does
+
+The Trident code that implements the topology is as follows:
+
+	topology.newStream("spout", spout)
+    .each(new Fields("tweet"), new SplitSentence(), new Fields("word"))
+	.each(new Fields("word"),new FilterStopWords())
+	.groupBy(new Fields("word"))
+	.each(new Fields("word"), new WordCount(), new Fields("count"))
+	.toStream()
+	.applyAssembly(new FirstN(10,"count"))
+	.toStream()
+	.aggregate(new Fields("word"),new ConvertToList(), new Fields("list"));
+
+
+###The spout
+
+The spout, **TwitterSpout** uses <a href="http://twitter4j.org/en/" target="_blank">Twitter4j</a> to retrieve tweets from Twitter. A filter is created (love, music, and coffee,) and incoming tweets (status) that match the filter are stored into a <a href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/LinkedBlockingQueue.html" target="_blank">LinkedBlockingQueue</a>. Finally, items are pulled off the queue and emitted into the topology.
+
+##Test the topology
+
+Use the following command to test the topology locally.
+
+	mvn compile exec:java -Dstorm.topology=com.microsoft.example.TwitterTrendingTopology
+
+After the topology starts, you should see debug information containing the hashtags and counts emitted by the topology. The output should appear similar to the following.
+
+
+	2016.04.28.05.46.18 Watch 3ujAe0LsqT Recap Rap Killer Video awm56w1kEb TheRoots JimmyFallon https 
+	2016.04.28.05.46.48 just entered $100 e-gift giveaway open GoTSeason6 WW Amazon GameOfThrones 
+	2016.04.28.05.47.20 ILoveNorthCoast Co.Antrim thanks 65% UK's interest 9PHPm3q9lU tourism sees http 
+	2016.04.28.05.47.47 JellyZombie ti cGP9xvoPLi Señor confiamos 🙏 🏻 en RT t.co 
+	2016.04.28.05.47.47 Ai pessoa pessoalmente com acho desculpa enganei encontra você d0Lxg2x2kc 
+	2016.04.28.05.47.50 EW teases got He's Westeros Isaac_H_Wright return nYdxVFc8di Stark's star 
+	2016.04.28.05.47.50 MyTeenGuide Today Re w5ZV2VA4Lm 7X075GvAqu Is Day Episode Season The 
+	2016.04.28.05.48.19 GoT_Tyrion fate Fuck Jaime us Lannister isn zlsR7JmAyp everyone prophecies 
+	2016.04.28.05.49.50 Fidarsi soprattutto Sq3OBVV4nz non meglio TronoDiSpade SkyOnline TronoDiMeme fidarsi bene 
+	2016.04.28.05.50.20 Certified badass psrGSvS7sj Whether guaranteed kick ass StarWars GameofThrones t.co 
+	2016.04.28.05.51.18 box Blu-Ray x6UHKSg3eT set shape HBO Mall d8LqzsvF23 great Used 
+	2016.04.28.05.52.48 De neige La promo avril fin va trop loin WinterIsComing 
+	2016.04.28.05.52.48 Obi1Shaneobi G1MAdZZzgd actually 200 old yo years girl find When 
+
