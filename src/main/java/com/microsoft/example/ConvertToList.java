@@ -31,8 +31,17 @@ public class ConvertToList implements ReducerAggregator<List<String>> {
 	    curr.add(tuple.getString(0));
 	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         int currSec = new Date().getSeconds();
-	if(curr.size() ==10)
-	      System.out.println(timeStamp + " " + curr.toString());
+	if(curr.size() ==10 && (currSec + 13) %30 < 4)
+	    printOutput(curr);
 	return curr;
+    }
+    
+    public void printOutput(List<String> list){
+	String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+	System.out.print(timeStamp + " ");
+	for( String s : list){
+	    System.out.print(s + " ");
+	}
+	System.out.println();
     }
 }

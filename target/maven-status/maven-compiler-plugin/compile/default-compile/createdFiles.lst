@@ -4,5 +4,6 @@ com/microsoft/example/ConvertToList.class
 com/microsoft/example/OutputTime.class
 com/microsoft/example/SplitSentence.class
 com/microsoft/example/Output.class
+com/microsoft/example/FilterStopWords.class
 com/microsoft/example/TwitterTrendingTopology.class
 com/microsoft/example/WordCount.class
